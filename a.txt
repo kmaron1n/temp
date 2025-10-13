@@ -1,1 +1,182 @@
-cat /flag.txt
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LexCoreAccess",
+      "Effect": "Allow",
+      "Action": [
+        "lex:StartConversation",
+        "lex:RecognizeText",
+        "lex:RecognizeUtterance",
+        "lex:ListBots",
+        "lex:ListIntents",
+        "lex:ListSlotTypes",
+        "lex:ListBotAliases"
+      ],
+      "Resource": [
+        "arn:aws:lex:ap-southeast-1:484907530463:bot/*",
+        "arn:aws:lex:ap-southeast-1:484907530463:bot-alias/*/*",
+        "arn:aws:lex:ap-southeast-1:484907530463:intent/*:*"
+      ]
+    },
+    {
+      "Sid": "LambdaInvokeAccess",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:InvokeFunction",
+        "lambda:GetPolicy"
+      ],
+      "Resource": [
+        "arn:aws:lambda:ap-southeast-1:484907530463:function:AmazonLex*"
+      ]
+    },
+    {
+      "Sid": "PollyAccessForVoice",
+      "Effect": "Allow",
+      "Action": [
+        "polly:SynthesizeSpeech",
+        "polly:DescribeVoices"
+      ],
+      "Resource": [
+        "arn:aws:polly:ap-southeast-1:484907530463:lexicon/*"
+      ]
+    },
+    {
+      "Sid": "LoggingMonitoring",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "cloudwatch:GetMetricStatistics"
+      ],
+      "Resource": [
+        "arn:aws:logs:ap-southeast-1:484907530463:log-group:/aws/lex/*"
+      ]
+    },
+    {
+      "Sid": "S3AccessForLexAssets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::lex-qna-assets-*/*"
+      ]
+    },
+    {
+      "Sid": "KMSDescribeOnly",
+      "Effect": "Allow",
+      "Action": "kms:DescribeKey",
+      "Resource": [
+        "arn:aws:kms:ap-southeast-1:484907530463:key/<specific-key-id>"
+      ]
+    },
+    {
+      "Sid": "LambdaPermissionForLex",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:AddPermission",
+        "lambda:RemovePermission"
+      ],
+      "Resource": "arn:aws:lambda:ap-southeast-1:484907530463:function:AmazonLex*",
+      "Condition": {
+        "StringEquals": {
+          "lambda:Principal": "lex.amazonaws.com"
+        }
+      }
+    }
+  ]
+}
+---------------------------------------------------
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "FirehoseS3DeliveryPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketLocation",
+                "s3:ListBucket"
+            ],
+            "Resource": "arn:aws:s3:::qna-bot-testing-04-metricsbucket-ug6n2be5ve9x"
+        },
+        {
+            "Sid": "FirehoseS3ObjectPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:AbortMultipartUpload",
+                "s3:ListBucketMultipartUploads",
+                "s3:PutObject"
+            ],
+            "Resource": "arn:aws:s3:::qna-bot-testing-04-metricsbucket-ug6n2be5ve9x/*"
+        },
+        {
+            "Sid": "FirehoseLambdaPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": "arn:aws:lambda:ap-southeast-1:484907530463:function:firehose-transformer:*"
+        },
+        {
+            "Sid": "FirehoseOpenSearchDestinationPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "es:DescribeDomain",
+                "es:DescribeDomainConfig",
+                "es:ESHttpPost",
+                "es:ESHttpPut",
+                "es:ESHttpGet"
+            ],
+            "Resource": [
+                "arn:aws:es:ap-southeast-1:484907530463:domain/opensearchdomai-oa7u42sdariy",
+                "arn:aws:es:ap-southeast-1:484907530463:domain/opensearchdomai-oa7u42sdariy/_doc/*"
+            ]
+        },
+        {
+            "Sid": "FirehoseLogsPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "arn:aws:logs:ap-southeast-1:484907530463:log-group:/aws/kinesisfirehose/*:*"
+        },
+        {
+            "Sid": "FirehoseLogGroupCreation",
+            "Effect": "Allow",
+            "Action": "logs:CreateLogGroup",
+            "Resource": "arn:aws:logs:ap-southeast-1:484907530463:log-group:/aws/kinesisfirehose/*"
+        },
+        {
+            "Sid": "FireHoseVPCConfigurationReadOnly",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeVpcs",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeNetworkInterfaces"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "FirehoseVPCNetworkInterfaceManagement",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:CreateNetworkInterfacePermission",
+                "ec2:DeleteNetworkInterface"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "ec2:AuthorizedService": "firehose.amazonaws.com"
+                }
+            }
+        }
+    ]
+}
