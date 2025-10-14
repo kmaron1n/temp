@@ -2,32 +2,9 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "LexInvoke",
       "Effect": "Allow",
-      "Action": [
-        "lex:PostText",
-        "lex:RecognizeText",
-        "lex:RecognizeUtterance"
-      ],
-      "Resource": "arn:aws:lex:*:<ACCOUNT_ID>:bot-alias/*"
-    },
-    {
-      "Sid": "LambdaInvoke",
-      "Effect": "Allow",
-      "Action": [
-        "lambda:InvokeFunction"
-      ],
-      "Resource": "arn:aws:lambda:*:<ACCOUNT_ID>:function:QnABot*"
-    },
-    {
-      "Sid": "CloudWatchLogs",
-      "Effect": "Allow",
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": "*"
+      "Principal": { "Service": "connect.amazonaws.com" },
+      "Action": "sts:AssumeRole"
     }
   ]
 }
