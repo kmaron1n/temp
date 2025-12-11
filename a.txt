@@ -1,3 +1,17 @@
-Enforce moderation of hate speech and sensitive content.
-Comply with Decree No. 13 on Personal Identifiable Information (PII); do not allow disclosure or display of any PII.
-Must not violate community standards — including the use of abusive language, incitement, or racial discrimination.
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LambdaDynamoDBCRUD",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": "arn:aws:dynamodb:<REGION>:<ACCOUNT_ID>:table/<TABLE_NAME>"
+    }
+  ]
+}
